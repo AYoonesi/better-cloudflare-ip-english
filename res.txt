@@ -1,1 +1,0 @@
-IP,max-speed,bandwidth,delay,colocation

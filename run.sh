@@ -72,7 +72,7 @@ echo "peak speed $max kB/s"
 echo "IP delay:$avgms ms"
 echo "data center $colo"
 echo "total time $[$endtime-$starttime] Second"
-echo "$anycast,$max,$realbandwidth,$avgms,$colo" >> res.txt
+echo "$anycast,$max,$realbandwidth,$avgms,$colo" >> res.csv
 }
 
 function rtthttps(){
@@ -473,7 +473,7 @@ do
 		echo "exit successfully"
 		break
 	fi
-	if [ $menu == 9]
+	if [ $menu == 9 ]
 	then
 		ips=ipv4
 		filename=ips-v4-range.txt
