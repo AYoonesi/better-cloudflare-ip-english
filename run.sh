@@ -460,6 +460,7 @@ do
 	echo "6. Single IP speed measurement"
 	echo "7. Empty the cache"
 	echo "8. update data"
+	echo "9. IPV4 preferred(TLS) using my range only"
 	echo -e "0. quit\n"
 	read -p "Please select the menu (default 0): " menu
 	if [ -z "$menu" ]
@@ -470,6 +471,14 @@ do
 	then
 		clear
 		echo "exit successfully"
+		break
+	fi
+	if [ $menu == 9]
+	then
+		ips=ipv4
+		filename=ips-v4-range.txt
+		tls=1
+		bettercloudflareip
 		break
 	fi
 	if [ $menu == 1 ]
