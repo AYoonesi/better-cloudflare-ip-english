@@ -1,7 +1,0 @@
-Some Windows systems do not come with curl. You need to run it before using it for the first time. Double-click the self-extracting curl.exe to automatically decompress curl.exe and run the file to the current directory.
-If the system already contains curl, please do not decompress this curl (cmd input curl to see if the returned result is curl: try 'curl --help' for more information)
-Windows 7 users use the ANSI encoded version
-Windows 8 and above users use the UTF-8 encoded version
-Note: The ANSI encoding version can also be used on all Windows platforms, and the BUG of some Windows systems will cause the console to output garbled characters
-
-Forked version note: as this file is translated in English it isn't really important if you use ANSI or UTF-8 version so I decided to merge both together and make it avaible on all windows versions, enjoy this code

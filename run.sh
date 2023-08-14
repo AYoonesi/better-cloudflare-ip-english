@@ -60,7 +60,6 @@ fi
 clear
 echo "preferred IP $anycast"
 echo "public net IP $publicip"
-echo "$anycast" >> res.txt
 if [ $tls == 1 ]
 then
 	echo "supported ports 443 2053 2083 2087 2096 8443"
@@ -73,6 +72,7 @@ echo "peak speed $max kB/s"
 echo "IP delay:$avgms ms"
 echo "data center $colo"
 echo "total time $[$endtime-$starttime] Second"
+echo "$anycast,$max,$realbandwidth,$avgms,$colo" >> res.txt
 }
 
 function rtthttps(){
