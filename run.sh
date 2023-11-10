@@ -159,6 +159,84 @@ function defaultbettercloudflareip(){
 	echo "$anycast,$max,$realbandwidth,$avgms,$colo" >> res.csv
 }
 
+function defaultbettercloudflareiptenthirty(){
+	bandwidth=10
+	tasknum=30
+	# read -p "Please set the expected bandwidth size (default minimum is 30 Mbps, unit Mbps):" bandwidth
+	# read -p "Please set the number of RTT test processes (default is 50, maximum 50):" tasknum
+	# if [ -z "$bandwidth" ]
+	# then
+	# 	bandwidth=30
+	# fi
+	# if [ $bandwidth -eq 0 ]
+	# then
+	# 	bandwidth=30
+	# fi
+	# if [ -z "$tasknum" ]
+	# then
+	# 	tasknum=50
+	# fi
+	# if [ $tasknum -eq 0 ]
+	# then
+	# 	echo "The number of processes cannot be 0, it is automatically set to the default value"
+	# 	tasknum=50
+	# fi
+	# if [ $tasknum -gt 50 ]
+	# then
+	# 	echo "Exceeded the maximum process limit, automatically set to the maximum"
+	# 	tasknum=50
+	# fi
+	speed=$[$bandwidth*128*1024]
+	starttime=$(date +%s)
+	cloudflaretest
+	realbandwidth=$[$max/128]
+	endtime=$(date +%s)
+	echo "Get details from server"
+	unset temp
+	if [ "$ips" == "ipv4" ]
+	then
+		if [ $tls == 1 ]
+		then
+			temp=($(curl --resolve $domain:443:$anycast --retry 1 -s https://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
+		else
+			temp=($(curl -x $anycast:80 --retry 1 -s http://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
+		fi
+	else
+		if [ $tls == 1 ]
+		then
+			temp=($(curl --resolve $domain:443:$anycast --retry 1 -s https://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
+		else
+			temp=($(curl -x [$anycast]:80 --retry 1 -s http://$domain/cdn-cgi/trace --connect-timeout 2 --max-time 3))
+		fi
+	fi
+	if [ $(echo ${temp[@]} | sed -e 's/ /\n/g' | grep colo= | wc -l) == 0 ]
+	then
+		publicip=get timeout
+		colo=get timeout
+	else
+		publicip=$(echo ${temp[@]} | sed -e 's/ /\n/g' | grep ip= | cut -f 2- -d'=')
+		colo=$(grep -w "($(echo ${temp[@]} | sed -e 's/ /\n/g' | grep colo= | cut -f 2- -d'='))" colo.txt | awk -F"-" '{print $1}')
+	fi
+	# clear
+	echo "preferred IP $anycast"
+	echo "public net IP $publicip"
+	if [ $tls == 1 ]
+	then
+		# echo "supported ports 443 2053 2083 2087 2096 8443"
+		echo "TLS Status: ON"
+	else
+		# echo "supported ports 80 8080 8880 2052 2082 2086 2095"
+		echo "TLS Status: OFF"
+	fi
+	echo "set bandwidth $bandwidth Mbps"
+	echo "measured bandwidth $realbandwidth Mbps"
+	echo "peak speed $max kB/s"
+	echo "IP delay:$avgms ms"
+	echo "data center $colo"
+	echo "total time $[$endtime-$starttime] Second"
+	echo "$anycast,$max,$realbandwidth,$avgms,$colo" >> res.csv
+}
+
 # salam
 # salam
 # salam
@@ -552,6 +630,7 @@ do
 	echo "9. IPV4 preferred(TLS) using my range only"
 	echo "10. IPV4 preferred(TLS) using my range only with 30mbps and 50 processes"
 	echo "11. IPV4 preferred(TLS) using my range only with 30mbps and 50 processes -- 5 TIMES!"
+	echo "12. IPV4 preferred(TLS) using my range only with 10mbps and 30 processes"
 	echo -e "0. quit\n"
 	read -p "Please select the menu (default 0): " menu
 	if [ -z "$menu" ]
@@ -578,6 +657,14 @@ do
 		filename=ips-v4-range.txt
 		tls=1
 		defaultbettercloudflareip
+		break
+	fi
+	if [ $menu == 12 ]
+	then
+		ips=ipv4
+		filename=ips-v4-range.txt
+		tls=1
+		defaultbettercloudflareiptenthirty
 		break
 	fi
 	if [ $menu == 11 ]
