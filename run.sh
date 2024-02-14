@@ -631,6 +631,7 @@ do
 	echo "10. IPV4 preferred(TLS) using my range only with 30mbps and 50 processes"
 	echo "11. IPV4 preferred(TLS) using my range only with 30mbps and 50 processes -- 5 TIMES!"
 	echo "12. IPV4 preferred(TLS) using my range only with 10mbps and 30 processes"
+	echo "13. IPV4 preferred(TLS) using my range only with 10mbps and 30 processes -- 10 times"
 	echo -e "0. quit\n"
 	read -p "Please select the menu (default 0): " menu
 	if [ -z "$menu" ]
@@ -665,6 +666,24 @@ do
 		filename=ips-v4-range.txt
 		tls=1
 		defaultbettercloudflareiptenthirty
+		break
+	fi
+	if [ $menu == 13 ]
+	then
+	clear
+		j=1
+		until [ $j -gt 10 ]
+		do
+			echo -e "\n ************************************ \n Welcome $j times \n ************************************ \n"
+			ips=ipv4
+			filename=ips-v4-range.txt
+			tls=1
+			defaultbettercloudflareiptenthirty
+			echo -e "$i finished \n ************************************ \n"
+			next_time=j+1
+			echo -e "Going for the $j+1 \n ************************************ \n"
+			((j++))
+		done
 		break
 	fi
 	if [ $menu == 11 ]
